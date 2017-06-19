@@ -9,6 +9,7 @@ using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
 using System.Linq;
 using WingtipToys.Models;
+using WingtipToys.Logic;
 
 namespace WingtipToys
 {
@@ -72,6 +73,22 @@ namespace WingtipToys
         protected void Page_Load(object sender, EventArgs e)
         {
 
+        }
+
+        /*
+         Before the page is rendered as HTML, the Page_PreRender event is raised. In the Page_PreRender handler, the total count
+         of the shopping cart is determined by calling the GetCount method. The returned value is added to the cartCount span
+         included in the markup of the Site.Master page. The <span> tags enables the inner elements to be properly rendered.
+         When any page of the site is displayed, the shopping cart total will be displayed. The user can also click the shopping 
+         cart total to display the shopping cart.
+         */
+        protected void Page_PreRender(object sender, EventArgs e)
+        {
+            using (ShoppingCartActions usersShoppingCart = new ShoppingCartActions())
+            {
+                string cartStr = string.Format("Cart ({0})", usersShoppingCart.GetCount());
+                cartCount.InnerText = cartStr;
+            }
         }
 
         public IQueryable<Category> GetCategories()
